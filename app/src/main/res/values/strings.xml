@@ -4,4 +4,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_sunrise">Sunrise</string>
+    <string name="label_current_location">Current location</string>
+    <string name="label_custom_city">Custom city</string>
+    <string name="label_type_custom_city">Type city name</string>
 </resources>

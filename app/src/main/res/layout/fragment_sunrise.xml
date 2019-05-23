@@ -1,7 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <RadioGroup
+                android:id="@+id/rg_radio_group"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="@dimen/window_inner_margin"
+                android:layout_marginTop="@dimen/window_inner_margin"
+                app:layout_constraintHorizontal_bias="0"
+                android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/rb_current_location"
+                    android:layout_width="wrap_content"
+                    android:text="@string/label_current_location"
+                    android:layout_height="wrap_content"/>
+            <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/rb_custom_city"
+                    android:text="@string/label_custom_city"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </RadioGroup>
 
-</LinearLayout>
+        <AutoCompleteTextView
+                android:id="@+id/actv_city_search"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/label_type_custom_city"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rg_radio_group"
+                android:layout_marginStart="@dimen/window_inner_margin"
+                android:layout_marginTop="@dimen/window_inner_margin"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_result"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/actv_city_search"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginStart="@dimen/window_inner_margin"
+                android:layout_marginTop="@dimen/window_inner_margin"
+                tools:text="@tools:sample/lorem"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

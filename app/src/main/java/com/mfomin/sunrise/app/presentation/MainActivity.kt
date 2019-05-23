@@ -15,7 +15,6 @@ class MainActivity : DaggerAppCompatActivity() {
         binding
         val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         setupActionBar(navController)
-        //NavigationUI.setupWithNavController(binding.bottomNavigation, navController)
     }
 
     override fun onSupportNavigateUp() =
