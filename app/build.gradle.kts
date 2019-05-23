@@ -22,6 +22,7 @@ android {
             proguardFiles("proguard-rules.pro")
         }
     }
+    dataBinding.isEnabled = true
 }
 
 dependencies {
@@ -30,6 +31,23 @@ dependencies {
     implementation(Config.Dependencies.kotlinStdLib)
     implementation(Config.Dependencies.appCompat)
     implementation(Config.Dependencies.ktxCore)
+
+    implementation(Config.Dependencies.constraintLayout)
+    implementation(Config.Dependencies.material)
+
+    implementation(Config.Dependencies.navigationFragmentKtx)
+    implementation(Config.Dependencies.navigationUiKtx)
+
+    implementation(Config.Dependencies.viewModelKtx)
+    implementation(Config.Dependencies.lifecycleExt)
+    implementation(Config.Dependencies.lifecycleRx)
+    kapt(Config.Dependencies.lifecycleCompiler)
+
+    implementation(Config.Dependencies.dagger)
+    implementation(Config.Dependencies.daggerAndroid)
+    implementation(Config.Dependencies.daggerAndroidSupport)
+    kapt(Config.Dependencies.daggerAndroidProcessor)
+    kapt(Config.Dependencies.daggerCompiler)
 
     testImplementation(Config.Dependencies.junit)
     androidTestImplementation(Config.Dependencies.testRunner)

@@ -39,6 +39,7 @@ object Config {
         const val appCompat = "androidx.appcompat:appcompat:${Config.Versions.support}"
         const val ktxCore = "androidx.core:core-ktx:${Config.Versions.ktxCore}"
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:${Config.Versions.constraintLayout}"
+        const val material = "com.google.android.material:material:${Versions.material}"
         const val viewModelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Config.Versions.lifecycle}"
         const val lifecycleExt = "androidx.lifecycle:lifecycle-extensions:${Config.Versions.lifecycle}"
         const val lifecycleRx = "androidx.lifecycle:lifecycle-reactivestreams-ktx:${Config.Versions.lifecycle}"
