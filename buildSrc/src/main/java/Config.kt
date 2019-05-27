@@ -30,6 +30,9 @@ object Config {
         const val testRunner = "1.1.0"
         const val espresso = "3.1.1"
         const val material = "1.0.0"
+        const val rxkotlin = "2.2.0"
+        const val rxjava = "2.2.0"
+
     }
 
     object Dependencies {
@@ -38,12 +41,16 @@ object Config {
         const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Config.Versions.kotlin}"
         const val appCompat = "androidx.appcompat:appcompat:${Config.Versions.support}"
         const val ktxCore = "androidx.core:core-ktx:${Config.Versions.ktxCore}"
+
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:${Config.Versions.constraintLayout}"
         const val material = "com.google.android.material:material:${Versions.material}"
+
         const val viewModelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Config.Versions.lifecycle}"
         const val lifecycleExt = "androidx.lifecycle:lifecycle-extensions:${Config.Versions.lifecycle}"
         const val lifecycleRx = "androidx.lifecycle:lifecycle-reactivestreams-ktx:${Config.Versions.lifecycle}"
         const val lifecycleCompiler = "androidx.lifecycle:lifecycle-compiler:${Config.Versions.lifecycle}"
+        const val liveData = "androidx.lifecycle:lifecycle-livedata-core:${Config.Versions.lifecycle}"
+
         const val navigationFragmentKtx =
             "android.arch.navigation:navigation-fragment-ktx:${Config.Versions.navigation}"
         const val navigationUiKtx = "android.arch.navigation:navigation-ui-ktx:${Config.Versions.navigation}"
@@ -51,17 +58,23 @@ object Config {
             "android.arch.navigation:navigation-safe-args-gradle-plugin:${Config.Versions.navigation}"
         const val roomRuntime = "androidx.room:room-runtime:${Config.Versions.room}"
         const val roomCompiler = "androidx.room:room-compiler:${Config.Versions.room}"
+
         const val dagger = "com.google.dagger:dagger:${Config.Versions.dagger}"
         const val daggerAndroid = "com.google.dagger:dagger-android:${Config.Versions.dagger}"
         const val daggerAndroidSupport = "com.google.dagger:dagger-android-support:${Config.Versions.dagger}"
         const val daggerAndroidProcessor = "com.google.dagger:dagger-android-processor:${Config.Versions.dagger}"
         const val daggerCompiler = "com.google.dagger:dagger-compiler:${Config.Versions.dagger}"
+
+        const val rxJava = "io.reactivex.rxjava2:rxjava:${Config.Versions.rxjava}"
+        const val rxKotlin = "io.reactivex.rxjava2:rxkotlin:${Config.Versions.rxkotlin}"
+
         const val retrofit = "com.squareup.retrofit2:retrofit:${Config.Versions.retrofit}"
         const val retrofitMoshi = "com.squareup.retrofit2:converter-moshi:${Config.Versions.retrofit}"
         const val retrofitCouroutines =
             "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:${Config.Versions.retrofitCoroutinesAdapter}"
         const val moshi = "com.squareup.moshi:moshi:${Config.Versions.moshi}"
         const val moshiCodeGen = "com.squareup.moshi:moshi-kotlin-codegen:${Config.Versions.moshi}"
+
         const val junit = "junit:junit:${Config.Versions.junit}"
         const val testRunner = "androidx.test.ext:junit:${Config.Versions.testRunner}"
         const val espresso = "androidx.test.espresso:espresso-core:${Config.Versions.espresso}"

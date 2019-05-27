@@ -7,10 +7,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 
 import com.mfomin.sunrise.app.R
+import com.mfomin.sunrise.app.databinding.FragmentSunriseBinding
+import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 
-class SunriseFragment : Fragment() {
+class SunriseFragment : DaggerFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,8 +25,9 @@ class SunriseFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sunrise, container, false)
+        val binding =
+            DataBindingUtil.inflate<FragmentSunriseBinding>(inflater, R.layout.fragment_sunrise, container, false)
+        return binding.root
     }
 
     override fun onAttach(context: Context) {

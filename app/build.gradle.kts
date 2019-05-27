@@ -17,6 +17,10 @@ android {
         testInstrumentationRunner = Config.Android.junitTestRunner
     }
     buildTypes {
+        getByName("debug") {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+        }
         getByName("release") {
             isMinifyEnabled = false
             proguardFiles("proguard-rules.pro")
@@ -27,6 +31,7 @@ android {
 
 dependencies {
     implementation(project(":domain"))
+    implementation(project(":data"))
 
     implementation(Config.Dependencies.kotlinStdLib)
     implementation(Config.Dependencies.appCompat)
@@ -48,6 +53,9 @@ dependencies {
     implementation(Config.Dependencies.daggerAndroidSupport)
     kapt(Config.Dependencies.daggerAndroidProcessor)
     kapt(Config.Dependencies.daggerCompiler)
+
+    implementation(Config.Dependencies.retrofit)
+    implementation(Config.Dependencies.retrofitMoshi)
 
     testImplementation(Config.Dependencies.junit)
     androidTestImplementation(Config.Dependencies.testRunner)
