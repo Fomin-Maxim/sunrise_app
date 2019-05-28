@@ -30,6 +30,7 @@ object Config {
         const val testRunner = "1.1.0"
         const val espresso = "3.1.1"
         const val material = "1.0.0"
+        const val places = "1.1.0"
         const val rxkotlin = "2.2.0"
         const val rxjava = "2.2.0"
 
@@ -44,6 +45,7 @@ object Config {
 
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:${Config.Versions.constraintLayout}"
         const val material = "com.google.android.material:material:${Versions.material}"
+        const val places = "com.google.android.libraries.places:places:${Versions.places}"
 
         const val viewModelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Config.Versions.lifecycle}"
         const val lifecycleExt = "androidx.lifecycle:lifecycle-extensions:${Config.Versions.lifecycle}"

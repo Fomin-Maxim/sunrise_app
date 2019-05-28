@@ -1,6 +1,6 @@
-package com.mfomin.sunrise.domain.api
+package com.mfomin.sunrise.remote
 
-import com.mfomin.sunrise.domain.model.Coordinates
+import com.mfomin.sunrise.remote.model.RemoteSunriseInfo
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -11,5 +11,5 @@ interface SunriseApi {
     fun getSunriseByCoordinates(
         @Query("lat") lat: String,
         @Query("lon") lon: String
-    ): Observable<Coordinates>
+    ): Observable<RemoteSunriseInfo>
 }

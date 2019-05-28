@@ -1,6 +1,6 @@
-package com.mfomin.sunrise.domain.api.di
+package com.mfomin.sunrise.remote.di
 
-import com.mfomin.sunrise.domain.api.SunriseApi
+import com.mfomin.sunrise.remote.SunriseApi
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides

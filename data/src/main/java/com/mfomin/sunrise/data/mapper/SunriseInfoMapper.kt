@@ -1,4 +1,4 @@
-package com.mfomin.sunrise.domain.db.mapper
+package com.mfomin.sunrise.data.mapper
 
 open class SunriseInfoMapper {
 
