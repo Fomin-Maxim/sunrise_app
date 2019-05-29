@@ -32,6 +32,7 @@ android {
 dependencies {
     implementation(project(":domain"))
     implementation(project(":data"))
+    implementation(project(":common"))
 
     implementation(Config.Dependencies.kotlinStdLib)
     implementation(Config.Dependencies.appCompat)
@@ -47,6 +48,9 @@ dependencies {
     implementation(Config.Dependencies.lifecycleExt)
     implementation(Config.Dependencies.lifecycleRx)
     kapt(Config.Dependencies.lifecycleCompiler)
+
+    implementation(Config.Dependencies.rxJava)
+    implementation(Config.Dependencies.rxAndroid)
 
     implementation(Config.Dependencies.dagger)
     implementation(Config.Dependencies.daggerAndroid)

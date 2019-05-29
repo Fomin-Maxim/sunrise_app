@@ -1,8 +1,7 @@
 package com.mfomin.sunrise.app.di
 
 import com.mfomin.sunrise.app.SunriseApplication
-import com.mfomin.sunrise.app.di.activity.ActivityModule
-import com.mfomin.sunrise.app.di.activity.MainActivityModule
+import com.mfomin.sunrise.app.di.activity.ActivityBuilder
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
@@ -14,7 +13,7 @@ import javax.inject.Singleton
     modules = [
         AndroidSupportInjectionModule::class,
         AppModule::class,
-        MainActivityModule::class,
+        ActivityBuilder::class,
         ViewModelModule::class
     ]
 )

@@ -33,6 +33,7 @@ object Config {
         const val places = "1.1.0"
         const val rxkotlin = "2.2.0"
         const val rxjava = "2.2.0"
+        const val rxandroid = "2.1.1"
 
     }
 
@@ -69,6 +70,7 @@ object Config {
 
         const val rxJava = "io.reactivex.rxjava2:rxjava:${Config.Versions.rxjava}"
         const val rxKotlin = "io.reactivex.rxjava2:rxkotlin:${Config.Versions.rxkotlin}"
+        const val rxAndroid = "io.reactivex.rxjava2:rxandroid:${Config.Versions.rxandroid}"
 
         const val retrofit = "com.squareup.retrofit2:retrofit:${Config.Versions.retrofit}"
         const val retrofitMoshi = "com.squareup.retrofit2:converter-moshi:${Config.Versions.retrofit}"

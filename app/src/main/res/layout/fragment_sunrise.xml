@@ -18,6 +18,8 @@
                     android:id="@+id/rb_current_location"
                     android:layout_width="wrap_content"
                     android:text="@string/label_current_location"
+                    android:enabled="false"
+                    android:checked="true"
                     android:layout_height="wrap_content"/>
             <androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/rb_custom_city"
