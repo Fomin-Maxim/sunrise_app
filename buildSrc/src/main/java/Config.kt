@@ -34,6 +34,7 @@ object Config {
         const val rxkotlin = "2.2.0"
         const val rxjava = "2.2.0"
         const val rxandroid = "2.1.1"
+        const val okhttp3LoggingInterceptor = "3.9.1"
 
     }
 
@@ -61,6 +62,7 @@ object Config {
             "android.arch.navigation:navigation-safe-args-gradle-plugin:${Config.Versions.navigation}"
         const val roomRuntime = "androidx.room:room-runtime:${Config.Versions.room}"
         const val roomCompiler = "androidx.room:room-compiler:${Config.Versions.room}"
+        const val roomRx = "androidx.room:room-rxjava2:${Config.Versions.room}"
 
         const val dagger = "com.google.dagger:dagger:${Config.Versions.dagger}"
         const val daggerAndroid = "com.google.dagger:dagger-android:${Config.Versions.dagger}"
@@ -72,6 +74,7 @@ object Config {
         const val rxKotlin = "io.reactivex.rxjava2:rxkotlin:${Config.Versions.rxkotlin}"
         const val rxAndroid = "io.reactivex.rxjava2:rxandroid:${Config.Versions.rxandroid}"
 
+        const val okhttp3LoggingInterceptor = "com.squareup.okhttp3:logging-interceptor:${Config.Versions.okhttp3LoggingInterceptor}"
         const val retrofit = "com.squareup.retrofit2:retrofit:${Config.Versions.retrofit}"
         const val retrofitMoshi = "com.squareup.retrofit2:converter-moshi:${Config.Versions.retrofit}"
         const val retrofitCouroutines =

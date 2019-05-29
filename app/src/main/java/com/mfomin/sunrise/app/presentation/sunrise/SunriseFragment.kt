@@ -7,17 +7,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import com.mfomin.sunrise.app.R
 import com.mfomin.sunrise.app.databinding.FragmentSunriseBinding
+import com.mfomin.sunrise.app.di.Injectable
 import com.mfomin.sunrise.app.permission.PermissionManager
+import com.mfomin.sunrise.app.util.livedata.liveDataResultHandler
+import com.mfomin.sunrise.app.util.livedata.observe
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
-class SunriseFragment : DaggerFragment() {
+class SunriseFragment : DaggerFragment(), Injectable {
 
     @Inject
     lateinit var permissionManager: PermissionManager
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val viewModel: SunriseViewModel by lazy {
+        ViewModelProviders.of(this, viewModelFactory)
+            .get(SunriseViewModel::class.java)
+    }
 
     lateinit var binding: FragmentSunriseBinding
 
@@ -51,7 +64,23 @@ class SunriseFragment : DaggerFragment() {
         binding.rbCustomCity.isChecked = !isEnabled
 
         if (isEnabled) {
+            subscribeToViewModel()
         }
+    }
+
+    private fun subscribeToViewModel() {
+        viewModel.sunriseInfo.observe(this, liveDataResultHandler(
+            onSuccess = {
+                binding.tvResult.text = it.sunriseInfo.toString()
+            },
+            onProgress = {
+                binding.tvResult.text = "loading..."
+            },
+            onError = {
+                binding.tvResult.text = "Error"
+            }
+        ))
+        viewModel.getSunriseInfo()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

@@ -1,6 +1,7 @@
 package com.mfomin.sunrise.app
 
 import com.mfomin.sunrise.app.di.DaggerAppComponent
+import com.mfomin.sunrise.cache.di.DatabaseModule
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
 

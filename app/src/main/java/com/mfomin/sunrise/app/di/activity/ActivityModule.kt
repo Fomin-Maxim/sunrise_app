@@ -18,19 +18,19 @@ import dagger.multibindings.IntoMap
 import javax.inject.Singleton
 
 @Module
-abstract class ActivityModule {
+interface ActivityModule {
 
     @Binds
-    abstract fun providesAppCompatActivity(mainActivity: MainActivity): AppCompatActivity
+    fun providesAppCompatActivity(mainActivity: MainActivity): AppCompatActivity
 
     @FragmentScope
     @ContributesAndroidInjector(modules = [PermissionModule::class])
-    abstract fun contributeSunriseFragment(): SunriseFragment
+    fun contributeSunriseFragment(): SunriseFragment
 
     @Binds
     @IntoMap
     @ViewModelKey(SunriseViewModel::class)
-    abstract fun bindSunriseViewModel(
+    fun bindSunriseViewModel(
         sunriseViewModel: SunriseViewModel
     ): ViewModel
 

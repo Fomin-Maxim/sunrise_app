@@ -1,27 +1,47 @@
 package com.mfomin.sunrise.cache
 
-import com.mfomin.sunrise.cache.mapper.CitySunriseCachedEntityMapper
+import com.mfomin.sunrise.cache.model.CitySunriseCached
 import com.mfomin.sunrise.cache.room.CitySunriseDao
+import com.mfomin.sunrise.common.mapper.Mapper
+import com.mfomin.sunrise.data.model.CitySunriseEntity
 import com.mfomin.sunrise.data.repository.CacheRepository
-import com.mfomin.sunrise.domain.model.CitySunrise
-import com.mfomin.sunrise.domain.repository.SunriseInfoRepository
 import io.reactivex.Completable
-import io.reactivex.Observable
+import io.reactivex.Single
 import javax.inject.Inject
 
 class CacheRepositoryImpl @Inject constructor(
     private val citySunriseDao: CitySunriseDao,
-    private val mapper: CitySunriseCachedEntityMapper
+    private val mapper: Mapper<CitySunriseCached, CitySunriseEntity>
 ) : CacheRepository {
-    override fun clearCurrentLocationSunrise(): Completable {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    private val expirationTimeCurrentLocation = 3 * 60 * 60 * 1000
+    private val expirationTimeCity = 6 * 60 * 60 * 1000
+
+    override fun saveCitySunrise(citySunriseEntity: CitySunriseEntity): Completable {
+        return citySunriseDao.insertCitySunrise(mapper.to(citySunriseEntity))
     }
 
-    override fun getCurrentLocationSunrise(): Observable<CitySunrise> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun isCached(): Single<Boolean> =
+        citySunriseDao.getCurrentLocationSunrise()
+            .flatMap {
+                Single.just(true)
+            }
+            .onErrorReturnItem(false)
 
-    override fun saveCitySunrise(citySunrise: CitySunrise): Completable {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun isCurrentLocationExpired(): Single<Boolean> =
+        citySunriseDao.getCurrentLocationSunrise().map {
+            System.currentTimeMillis() - it.date > expirationTimeCurrentLocation
+        }
+
+    override fun isCityLocationExpired(): Single<Boolean> =
+        citySunriseDao.getCurrentLocationSunrise().map {
+            System.currentTimeMillis() - it.date > expirationTimeCity
+        }
+
+    override fun clearCurrentLocationSunrise(): Completable =
+        citySunriseDao.deleteCurrentLocationSunrise()
+
+    override fun getCurrentLocationSunrise(): Single<CitySunriseEntity> =
+        citySunriseDao.getCurrentLocationSunrise().map {
+            mapper.from(it)
+        }
 }

@@ -1,7 +1,11 @@
 package com.mfomin.sunrise.app.di
 
+import android.app.Application
+import android.content.Context
 import com.mfomin.sunrise.app.SunriseApplication
 import com.mfomin.sunrise.app.di.activity.ActivityBuilder
+import com.mfomin.sunrise.cache.di.DatabaseModule
+import com.mfomin.sunrise.remote.di.NetworkModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
@@ -14,7 +18,9 @@ import javax.inject.Singleton
         AndroidSupportInjectionModule::class,
         AppModule::class,
         ActivityBuilder::class,
-        ViewModelModule::class
+        ViewModelModule::class,
+        DatabaseModule::class,
+        NetworkModule::class
     ]
 )
 interface AppComponent : AndroidInjector<SunriseApplication> {
@@ -22,7 +28,9 @@ interface AppComponent : AndroidInjector<SunriseApplication> {
     @Component.Builder
     interface Builder {
         @BindsInstance
-        fun bindApplication(app: SunriseApplication): Builder
+        fun bindApplication(app: Application): Builder
+//        @BindsInstance
+//        fun bindDatabase(databaseModule: DatabaseModule): Builder
 
         fun build(): AppComponent
     }

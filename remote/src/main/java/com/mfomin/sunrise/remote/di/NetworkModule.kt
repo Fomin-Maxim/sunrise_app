@@ -4,8 +4,10 @@ import com.mfomin.sunrise.remote.SunriseApi
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
+import dagger.multibindings.IntoSet
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
@@ -44,7 +46,7 @@ open class NetworkModule {
             .addConverterFactory(
                 MoshiConverterFactory.create(
                     Moshi.Builder()
-                        .add(MoshiConverterFactory.create())
+//                        .add(MoshiConverterFactory.create())
                         .build()
                 )
             )
@@ -59,6 +61,13 @@ open class NetworkModule {
         retrofit: Retrofit
     ): SunriseApi {
         return retrofit.create(SunriseApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    @IntoSet
+    fun provideNetworkLogger(): Interceptor = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BASIC
     }
 }
 

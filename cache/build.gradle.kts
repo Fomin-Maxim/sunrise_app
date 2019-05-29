@@ -1,6 +1,19 @@
 plugins {
-    id("kotlin")
+    id("com.android.library")
+    id("kotlin-android")
     id("kotlin-kapt")
+}
+
+android {
+    compileSdkVersion(Config.Android.compileSdkVersion)
+    buildToolsVersion(Config.Android.buildToolsVersion)
+    defaultConfig {
+        minSdkVersion(Config.Android.minSdkVersion)
+        targetSdkVersion(Config.Android.targetSdkVersion)
+        versionCode = Config.Android.versionCode
+        versionName = Config.Android.versionName
+        testInstrumentationRunner = Config.Android.junitTestRunner
+    }
 }
 
 dependencies {
@@ -15,7 +28,8 @@ dependencies {
 
     implementation(Config.Dependencies.rxJava)
 
-    implementation(Config.Dependencies.roomRuntime)
+    api(Config.Dependencies.roomRuntime)
+    implementation(Config.Dependencies.roomRx)
     kapt(Config.Dependencies.roomCompiler)
 
     testImplementation(Config.Dependencies.junit)

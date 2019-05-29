@@ -7,7 +7,7 @@ import io.reactivex.Observable
 interface SunriseInfoRepository {
     fun clearCurrentLocationSunrise(): Completable
 
-    fun getCurrentLocationSurise(): Observable<CitySunrise>
+    fun getCurrentLocationSunrise(lat: Double, lon: Double): Observable<CitySunrise>
 
     fun saveCitySunrise(citySunrise: CitySunrise): Completable
 }

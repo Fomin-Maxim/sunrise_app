@@ -33,6 +33,8 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":data"))
     implementation(project(":common"))
+    implementation(project(":cache"))
+    implementation(project(":remote"))
 
     implementation(Config.Dependencies.kotlinStdLib)
     implementation(Config.Dependencies.appCompat)
@@ -50,6 +52,7 @@ dependencies {
     kapt(Config.Dependencies.lifecycleCompiler)
 
     implementation(Config.Dependencies.rxJava)
+    implementation(Config.Dependencies.rxKotlin)
     implementation(Config.Dependencies.rxAndroid)
 
     implementation(Config.Dependencies.dagger)

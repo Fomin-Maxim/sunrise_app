@@ -19,6 +19,7 @@ dependencies {
     implementation(Config.Dependencies.rxKotlin)
     implementation(Config.Dependencies.rxJava)
 
+    implementation(Config.Dependencies.okhttp3LoggingInterceptor)
     implementation(Config.Dependencies.retrofit)
     implementation(Config.Dependencies.retrofitMoshi)
 
