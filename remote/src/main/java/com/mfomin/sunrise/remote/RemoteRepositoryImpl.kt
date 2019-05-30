@@ -1,7 +1,6 @@
 package com.mfomin.sunrise.remote
 
 import com.mfomin.sunrise.common.mapper.MapperFrom
-import com.mfomin.sunrise.data.model.CitySunriseEntity
 import com.mfomin.sunrise.data.model.SunriseInfoEntity
 import com.mfomin.sunrise.data.repository.RemoteRepository
 import com.mfomin.sunrise.remote.model.RemoteSunriseInfo
@@ -15,6 +14,6 @@ class RemoteRepositoryImpl @Inject constructor(
     override fun getSunriseInfo(lat: Double, lon: Double): Single<SunriseInfoEntity> =
         sunriseApi.getSunriseByCoordinates(lat, lon)
             .map {
-                mapper.from(it)
+                mapper.from(it.results)
             }
 }

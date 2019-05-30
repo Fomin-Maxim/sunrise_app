@@ -29,8 +29,6 @@ interface AppComponent : AndroidInjector<SunriseApplication> {
     interface Builder {
         @BindsInstance
         fun bindApplication(app: Application): Builder
-//        @BindsInstance
-//        fun bindDatabase(databaseModule: DatabaseModule): Builder
 
         fun build(): AppComponent
     }

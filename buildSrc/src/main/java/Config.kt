@@ -35,6 +35,7 @@ object Config {
         const val rxjava = "2.2.0"
         const val rxandroid = "2.1.1"
         const val okhttp3LoggingInterceptor = "3.9.1"
+        const val retrofitRxAdapter = "1.0.0"
 
     }
 
@@ -77,6 +78,7 @@ object Config {
         const val okhttp3LoggingInterceptor = "com.squareup.okhttp3:logging-interceptor:${Config.Versions.okhttp3LoggingInterceptor}"
         const val retrofit = "com.squareup.retrofit2:retrofit:${Config.Versions.retrofit}"
         const val retrofitMoshi = "com.squareup.retrofit2:converter-moshi:${Config.Versions.retrofit}"
+        const val retrofitRxAdapter = "com.squareup.retrofit2:adapter-rxjava2:${Config.Versions.retrofit}"
         const val retrofitCouroutines =
             "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:${Config.Versions.retrofitCoroutinesAdapter}"
         const val moshi = "com.squareup.moshi:moshi:${Config.Versions.moshi}"

@@ -1,6 +1,7 @@
 package com.mfomin.sunrise.remote.di
 
 import com.mfomin.sunrise.remote.SunriseApi
+import com.mfomin.sunrise.remote.retrofit.MainRxErrorHandlingCallAdapterFactory
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -44,13 +45,9 @@ open class NetworkModule {
             .client(okHttpClient)
             .baseUrl("https://api.sunrise-sunset.org")
             .addConverterFactory(
-                MoshiConverterFactory.create(
-                    Moshi.Builder()
-//                        .add(MoshiConverterFactory.create())
-                        .build()
-                )
+                MoshiConverterFactory.create()
             )
-//            .addCallAdapterFactory(MainRxErrorHandlingCallAdapterFactory.createAsync())
+            .addCallAdapterFactory(MainRxErrorHandlingCallAdapterFactory.createAsync())
             .build()
     }
 

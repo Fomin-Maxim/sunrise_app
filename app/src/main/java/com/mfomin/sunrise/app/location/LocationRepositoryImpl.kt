@@ -35,9 +35,7 @@ class LocationRepositoryImpl @Inject constructor(
 
     private val enabledProviders
         get() = this.providers.filter { this.manager.isProviderEnabled(it) }
-    //endregion
 
-    //region LocationGateway Methods
     @RequiresPermission(anyOf = [Manifest.permission.ACCESS_FINE_LOCATION])
     override fun getBestLastLocation(): Observable<SimpleLocation> = Observable.create<SimpleLocation> {
         val location = this.internalGetBestLastLocation()
@@ -109,13 +107,10 @@ class LocationRepositoryImpl @Inject constructor(
 
         return bestLocation
     }
-    //endregion
 
     private fun Location.isBetterThan(previousLocation: Location?) =
         previousLocation == null || this.accuracy < previousLocation.accuracy
-    //endregion
 
-    //region Inner Types
     inner class LocationListenerImpl(private val emitter: ObservableEmitter<SimpleLocation>) : LocationListener {
 
         private var bestLocation: Location? = null
@@ -134,6 +129,4 @@ class LocationRepositoryImpl @Inject constructor(
 
         override fun onProviderDisabled(provider: String?) {}
     }
-//endregion
-
 }

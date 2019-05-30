@@ -32,7 +32,7 @@ class SunriseFragment : DaggerFragment(), Injectable {
             .get(SunriseViewModel::class.java)
     }
 
-    lateinit var binding: FragmentSunriseBinding
+    private lateinit var binding: FragmentSunriseBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,6 +40,22 @@ class SunriseFragment : DaggerFragment(), Injectable {
     ): View? {
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_sunrise, container, false)
+
+        binding.rbCurrentLocation.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                viewModel.getSunriseInfo()
+                binding.tvResult.text = ""
+                binding.actvCitySearch.isEnabled = false
+            }
+        }
+
+        binding.rbCustomCity.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                binding.tvResult.text = ""
+                binding.actvCitySearch.isEnabled = true
+            }
+        }
+
         return binding.root
     }
 
