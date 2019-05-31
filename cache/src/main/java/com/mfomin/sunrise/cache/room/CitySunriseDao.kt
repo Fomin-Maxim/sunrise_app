@@ -18,7 +18,7 @@ interface CitySunriseDao {
     fun getCurrentLocationSunrise(): Single<CitySunriseCached>
 
     @Query("SELECT * FROM ${SunriseDatabase.TableCitySunrise.NAME} WHERE name = :cityName LIMIT 1")
-    fun getLocationSunrise(cityName: String): Single<CitySunriseCached>
+    fun getCitySunrise(cityName: String): Single<CitySunriseCached>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCitySunrise(citySunriseCached: CitySunriseCached): Completable

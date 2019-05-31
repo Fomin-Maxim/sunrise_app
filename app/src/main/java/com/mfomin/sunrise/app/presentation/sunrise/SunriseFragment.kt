@@ -3,12 +3,18 @@ package com.mfomin.sunrise.app.presentation.sunrise
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.gms.common.api.Status
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.google.android.material.snackbar.Snackbar
 import com.mfomin.sunrise.app.R
 import com.mfomin.sunrise.app.databinding.FragmentSunriseBinding
@@ -17,7 +23,9 @@ import com.mfomin.sunrise.app.permission.PermissionManager
 import com.mfomin.sunrise.app.util.livedata.liveDataResultHandler
 import com.mfomin.sunrise.app.util.livedata.observe
 import dagger.android.support.DaggerFragment
+import java.util.*
 import javax.inject.Inject
+
 
 class SunriseFragment : DaggerFragment(), Injectable {
 
@@ -38,6 +46,7 @@ class SunriseFragment : DaggerFragment(), Injectable {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_sunrise, container, false)
 
@@ -45,16 +54,51 @@ class SunriseFragment : DaggerFragment(), Injectable {
             if (isChecked) {
                 viewModel.getSunriseInfo()
                 binding.tvResult.text = ""
-                binding.actvCitySearch.isEnabled = false
+                binding.btnCitySelect.isEnabled = false
             }
         }
 
         binding.rbCustomCity.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 binding.tvResult.text = ""
-                binding.actvCitySearch.isEnabled = true
+                binding.btnCitySelect.isEnabled = true
             }
         }
+
+        binding.btnCitySelect.setOnClickListener {
+
+        }
+
+        val autocompleteFragment =
+            childFragmentManager.findFragmentById(R.id.autocomplete_fragment) as AutocompleteSupportFragment
+
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME))
+
+        autocompleteFragment.setPlaceFields(
+            Arrays.asList(
+                Place.Field.NAME,
+                Place.Field.LAT_LNG
+            )
+        )
+
+        autocompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
+            override fun onError(status: Status) {
+
+            }
+
+            override fun onPlaceSelected(place: Place) {
+                if (place.latLng == null || place.name == null) {
+                    Snackbar.make(binding.root, R.string.error_cant_obtain_city_location, Snackbar.LENGTH_LONG)
+                        .show()
+                } else {
+                    viewModel.getSunriseInfoForCity(
+                        place.name ?: "",
+                        place.latLng!!.latitude,
+                        place.latLng!!.longitude
+                    )
+                }
+            }
+        })
 
         return binding.root
     }

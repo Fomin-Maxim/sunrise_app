@@ -20,19 +20,26 @@ class CacheRepositoryImpl @Inject constructor(
         return citySunriseDao.insertCitySunrise(mapper.to(citySunriseEntity))
     }
 
-    override fun isCached(): Single<Boolean> =
+    override fun isCurrentLocationSunriseCached(): Single<Boolean> =
         citySunriseDao.getCurrentLocationSunrise()
             .flatMap {
                 Single.just(true)
             }
             .onErrorReturnItem(false)
 
-    override fun isCurrentLocationExpired(): Single<Boolean> =
+    override fun isCitySunriseCached(name: String): Single<Boolean> =
+        citySunriseDao.getCitySunrise(name)
+            .flatMap {
+                Single.just(true)
+            }
+            .onErrorReturnItem(false)
+
+    override fun isCurrentLocationSunriseExpired(): Single<Boolean> =
         citySunriseDao.getCurrentLocationSunrise().map {
             System.currentTimeMillis() - it.date > expirationTimeCurrentLocation
         }
 
-    override fun isCityLocationExpired(): Single<Boolean> =
+    override fun isCitySunriseExpired(name: String): Single<Boolean> =
         citySunriseDao.getCurrentLocationSunrise().map {
             System.currentTimeMillis() - it.date > expirationTimeCity
         }
@@ -42,6 +49,11 @@ class CacheRepositoryImpl @Inject constructor(
 
     override fun getCurrentLocationSunrise(): Single<CitySunriseEntity> =
         citySunriseDao.getCurrentLocationSunrise().map {
+            mapper.from(it)
+        }
+
+    override fun getCityLocationSunrise(name: String): Single<CitySunriseEntity> =
+        citySunriseDao.getCitySunrise(name).map {
             mapper.from(it)
         }
 }

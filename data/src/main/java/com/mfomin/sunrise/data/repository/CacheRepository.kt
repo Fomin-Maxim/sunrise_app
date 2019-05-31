@@ -11,12 +11,15 @@ interface CacheRepository {
 
     fun getCurrentLocationSunrise(): Single<CitySunriseEntity>
 
+    fun getCityLocationSunrise(name: String): Single<CitySunriseEntity>
+
     fun saveCitySunrise(citySunriseEntity: CitySunriseEntity): Completable
 
-    fun isCached(): Single<Boolean>
+    fun isCurrentLocationSunriseExpired(): Single<Boolean>
 
-    fun isCurrentLocationExpired(): Single<Boolean>
+    fun isCitySunriseExpired(name: String): Single<Boolean>
 
-    fun isCityLocationExpired(): Single<Boolean>
+    fun isCitySunriseCached(name: String): Single<Boolean>
 
+    fun isCurrentLocationSunriseCached(): Single<Boolean>
 }

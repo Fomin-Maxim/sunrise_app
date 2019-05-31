@@ -16,6 +16,7 @@ android {
         versionName = Config.Android.versionName
         testInstrumentationRunner = Config.Android.junitTestRunner
     }
+
     buildTypes {
         getByName("debug") {
             applicationIdSuffix = ".debug"
@@ -47,6 +48,7 @@ dependencies {
 
     implementation(Config.Dependencies.constraintLayout)
     implementation(Config.Dependencies.material)
+    implementation(Config.Dependencies.places)
 
     implementation(Config.Dependencies.navigationFragmentKtx)
     implementation(Config.Dependencies.navigationUiKtx)

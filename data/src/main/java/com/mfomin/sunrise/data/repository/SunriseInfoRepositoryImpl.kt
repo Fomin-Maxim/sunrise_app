@@ -19,6 +19,7 @@ class SunriseInfoRepositoryImpl @Inject constructor(
     private val networkConnection: NetworkConnection,
     private val mapper: Mapper<CitySunriseEntity, CitySunrise>
 ) : SunriseInfoRepository {
+
     override fun clearCurrentLocationSunrise(): Completable {
         return cacheRepository.clearCurrentLocationSunrise()
     }
@@ -30,8 +31,8 @@ class SunriseInfoRepositoryImpl @Inject constructor(
             } else {
                 Observable.concat(
                     Single.zip(
-                        cacheRepository.isCached(),
-                        cacheRepository.isCurrentLocationExpired(),
+                        cacheRepository.isCurrentLocationSunriseCached(),
+                        cacheRepository.isCurrentLocationSunriseExpired(),
                         BiFunction<Boolean, Boolean, Observable<CitySunriseEntity>> { isCached, isExpired ->
                             if (isCached && !isExpired)
                                 cacheRepository.getCurrentLocationSunrise().toObservable()
@@ -56,12 +57,48 @@ class SunriseInfoRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun getRemoteSunriseInfo(lat: Double, lon: Double): Observable<CitySunriseEntity> {
-        //TODO save to cache with city name
-        return remoteRepository.getSunriseInfo(lat, lon).map {
-            CitySunriseEntity(1, System.currentTimeMillis(), "", CoordinatesEntity(lat, lon), it)
-        }.toObservable()
+    override fun getCitySunrise(name: String, lat: Double, lon: Double): Observable<CitySunrise> {
+        val citySunrise: Observable<CitySunriseEntity> =
+            if (networkConnection.isConnected()) {
+                getRemoteSunriseInfo(name, lat, lon)
+            } else {
+                Observable.concat(
+                    Single.zip(
+                        cacheRepository.isCitySunriseCached(name),
+                        cacheRepository.isCitySunriseExpired(name),
+                        BiFunction<Boolean, Boolean, Observable<CitySunriseEntity>> { isCached, isExpired ->
+                            if (isCached && !isExpired)
+                                cacheRepository.getCityLocationSunrise(name).toObservable()
+                            else
+                                Observable.error(
+                                    CachedSunriseNotAvailableException(
+                                        if (isCached)
+                                            "Cache is not available"
+                                        else
+                                            "Cache is expired"
+                                    )
+                                )
+                        })
+                        .toObservable()
+                        .switchMap { it },
+                    getRemoteSunriseInfo(name, lat, lon)
+                )
+            }
+
+        return citySunrise.map {
+            mapper.from(it)
+        }
     }
+
+    private fun getRemoteSunriseInfo(lat: Double, lon: Double): Observable<CitySunriseEntity> =
+        getRemoteSunriseInfo("", lat, lon)
+
+    private fun getRemoteSunriseInfo(name: String, lat: Double, lon: Double): Observable<CitySunriseEntity> =
+        remoteRepository.getSunriseInfo(lat, lon).map {
+            val result = CitySunriseEntity(1, System.currentTimeMillis(), name, CoordinatesEntity(lat, lon), it)
+            saveCitySunrise(mapper.from(result))
+            result
+        }.toObservable()
 
     override fun saveCitySunrise(citySunrise: CitySunrise): Completable {
         return cacheRepository.saveCitySunrise(mapper.to(citySunrise))

@@ -9,5 +9,7 @@ interface SunriseInfoRepository {
 
     fun getCurrentLocationSunrise(lat: Double, lon: Double): Observable<CitySunrise>
 
+    fun getCitySunrise(name: String, lat: Double, lon: Double): Observable<CitySunrise>
+
     fun saveCitySunrise(citySunrise: CitySunrise): Completable
 }

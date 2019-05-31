@@ -4,10 +4,11 @@
     <string name="title_sunrise">Sunrise</string>
     <string name="label_current_location">Current location</string>
     <string name="label_custom_city">Custom city</string>
-    <string name="label_type_custom_city">Type city name</string>
+    <string name="label_select_city">Select name</string>
 
     <string name="label_need_permission">App need your permission to show sunrise info for your current location</string>
 
     <string name="error_permission_required_location">Application doesn\'t has access to device location</string>
     <string name="label_give_permission">Allow</string>
+    <string name="error_cant_obtain_city_location">Can\'t obtain city location</string>
 </resources>
