@@ -1,6 +1,7 @@
 package com.mfomin.sunrise.app.presentation.sunrise
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -40,48 +41,65 @@ class SunriseFragment : DaggerFragment(), Injectable {
             .get(SunriseViewModel::class.java)
     }
 
+    private var autocompleteFragment: AutocompleteSupportFragment? = null
+    private lateinit var internetAvailabilitySnackbar: Snackbar
+
     private lateinit var binding: FragmentSunriseBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_sunrise, container, false)
 
+        enableCustomCity(false)
+
         binding.rbCurrentLocation.setOnCheckedChangeListener { _, isChecked ->
+            enableCustomCity(!isChecked)
             if (isChecked) {
                 viewModel.getSunriseInfo()
                 binding.tvResult.text = ""
-                binding.btnCitySelect.isEnabled = false
             }
         }
 
         binding.rbCustomCity.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 binding.tvResult.text = ""
-                binding.btnCitySelect.isEnabled = true
             }
         }
 
-        binding.btnCitySelect.setOnClickListener {
-
-        }
-
-        val autocompleteFragment =
+        autocompleteFragment =
             childFragmentManager.findFragmentById(R.id.autocomplete_fragment) as AutocompleteSupportFragment
+        enableCustomCity(false)
 
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME))
+        setupAutocompleteFragment()
+        subscribeToViewModel()
 
-        autocompleteFragment.setPlaceFields(
+        //кеширование
+        //вывод (время)
+        //отсутствие инета
+        //чистка кода
+
+        return binding.root
+    }
+
+    private fun setupAutocompleteFragment() {
+        autocompleteFragment?.a?.hint = getString(R.string.label_select_city)
+
+        autocompleteFragment?.setPlaceFields(
             Arrays.asList(
-                Place.Field.NAME,
-                Place.Field.LAT_LNG
+                Place.Field.ID, Place.Field.NAME
             )
         )
 
-        autocompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
+        autocompleteFragment?.setPlaceFields(
+            Arrays.asList(
+                Place.Field.NAME, Place.Field.LAT_LNG
+            )
+        )
+
+        autocompleteFragment?.setOnPlaceSelectedListener(object : PlaceSelectionListener {
             override fun onError(status: Status) {
 
             }
@@ -99,8 +117,6 @@ class SunriseFragment : DaggerFragment(), Injectable {
                 }
             }
         })
-
-        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -115,6 +131,9 @@ class SunriseFragment : DaggerFragment(), Injectable {
                 enableCurrentLocation(false)
                 showLocationPermissionRequiredError()
             })
+
+        internetAvailabilitySnackbar =
+            Snackbar.make(binding.root, R.string.error_no_internet, Snackbar.LENGTH_INDEFINITE)
     }
 
     private fun enableCurrentLocation(isEnabled: Boolean) {
@@ -122,24 +141,43 @@ class SunriseFragment : DaggerFragment(), Injectable {
         binding.rbCurrentLocation.isChecked = isEnabled
 
         binding.rbCustomCity.isChecked = !isEnabled
+    }
 
-        if (isEnabled) {
-            subscribeToViewModel()
-        }
+    private fun enableCustomCity(isEnabled: Boolean) {
+        if (autocompleteFragment != null)
+            if (isEnabled)
+                childFragmentManager.beginTransaction().show(autocompleteFragment!!).commit()
+            else
+                childFragmentManager.beginTransaction().hide(autocompleteFragment!!).commit()
     }
 
     private fun subscribeToViewModel() {
         viewModel.sunriseInfo.observe(this, liveDataResultHandler(
             onSuccess = {
-                binding.tvResult.text = it.sunriseInfo.toString()
+                binding.tvResult.text =
+                    getString(
+                        R.string.sunrise_result,
+                        it.sunriseInfo.sunrise,
+                        it.sunriseInfo.sunset,
+                        it.sunriseInfo.solarNoon,
+                        it.sunriseInfo.dayLength
+                    )
             },
             onProgress = {
-                binding.tvResult.text = "loading..."
+                binding.tvResult.text = getString(R.string.label_loading)
             },
             onError = {
-                binding.tvResult.text = "Error"
+                binding.tvResult.text = getString(R.string.label_unknown_error)
             }
         ))
+
+        viewModel.networkConnected.observe(this, androidx.lifecycle.Observer { isConnected ->
+            if (isConnected) {
+                internetAvailabilitySnackbar.show()
+            } else {
+                internetAvailabilitySnackbar.dismiss()
+            }
+        })
         viewModel.getSunriseInfo()
     }
 

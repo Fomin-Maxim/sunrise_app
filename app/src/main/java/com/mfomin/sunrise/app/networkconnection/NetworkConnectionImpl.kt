@@ -11,5 +11,4 @@ class NetworkConnectionImpl @Inject constructor(private val context: Context) : 
         val connectionManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         return connectionManager.activeNetworkInfo != null && connectionManager.activeNetworkInfo!!.isConnected
     }
-
 }

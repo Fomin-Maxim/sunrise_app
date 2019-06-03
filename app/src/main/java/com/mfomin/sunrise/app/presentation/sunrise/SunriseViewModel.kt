@@ -1,33 +1,36 @@
 package com.mfomin.sunrise.app.presentation.sunrise
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.google.android.libraries.places.internal.it
 import com.mfomin.sunrise.app.presentation.common.BaseViewModel
+import com.mfomin.sunrise.app.util.livedata.Result
 import com.mfomin.sunrise.common.scheduler.SchedulerProvider
 import com.mfomin.sunrise.domain.location.LocationRepository
 import com.mfomin.sunrise.domain.model.CitySunrise
+import com.mfomin.sunrise.domain.networkconnection.NetworkStateListener
 import com.mfomin.sunrise.domain.repository.SunriseInfoRepository
-import javax.inject.Inject
-import com.mfomin.sunrise.app.util.livedata.Result
+import io.reactivex.Single
 import io.reactivex.rxkotlin.addTo
-import com.google.android.libraries.places.internal.e
-import com.google.android.gms.common.api.ApiException
-import com.google.android.libraries.places.internal.i
-import com.google.android.libraries.places.api.model.AutocompletePrediction
-import com.google.android.libraries.places.api.model.TypeFilter
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.libraries.places.api.model.RectangularBounds
-import com.google.android.libraries.places.api.model.AutocompleteSessionToken
+import java.util.*
+import javax.inject.Inject
 
 
 class SunriseViewModel @Inject constructor(
     private val locationRepository: LocationRepository,
     private val sunriseInfoRepository: SunriseInfoRepository,
-    private val schedulerProvider: SchedulerProvider
+    private val schedulerProvider: SchedulerProvider,
+    private val networkStateListener: NetworkStateListener
 ) : BaseViewModel() {
 
     val sunriseInfo = MutableLiveData<Result<CitySunrise>>()
+
+    val networkConnected = MutableLiveData<Boolean>()
+
+    init {
+        networkStateListener.onNetConnected().subscribe {
+            networkConnected.postValue(it)
+        }.addTo(compositeDisposable)
+    }
 
     fun getSunriseInfo() {
         locationRepository.getBestLastLocation()
