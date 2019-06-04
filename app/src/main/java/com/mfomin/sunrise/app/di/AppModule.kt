@@ -2,33 +2,25 @@ package com.mfomin.sunrise.app.di
 
 import android.app.Application
 import android.content.Context
-import android.location.Location
-import com.mfomin.sunrise.app.SunriseApplication
 import com.mfomin.sunrise.app.location.LocationRepositoryImpl
 import com.mfomin.sunrise.app.networkconnection.NetworkConnectionImpl
 import com.mfomin.sunrise.app.networkconnection.NetworkStateListenerImpl
 import com.mfomin.sunrise.app.util.AppSchedulerProvider
 import com.mfomin.sunrise.cache.CacheRepositoryImpl
 import com.mfomin.sunrise.cache.mapper.CitySunriseCachedEntityMapper
-import com.mfomin.sunrise.cache.model.CitySunriseCached
 import com.mfomin.sunrise.cache.room.CitySunriseDao
-import com.mfomin.sunrise.common.mapper.Mapper
 import com.mfomin.sunrise.common.scheduler.SchedulerProvider
 import com.mfomin.sunrise.data.mapper.CitySunriseMapper
-import com.mfomin.sunrise.data.model.CitySunriseEntity
-import com.mfomin.sunrise.data.model.SunriseInfoEntity
 import com.mfomin.sunrise.data.repository.CacheRepository
 import com.mfomin.sunrise.data.repository.RemoteRepository
 import com.mfomin.sunrise.data.repository.SunriseInfoRepositoryImpl
 import com.mfomin.sunrise.domain.location.LocationRepository
-import com.mfomin.sunrise.domain.model.CitySunrise
 import com.mfomin.sunrise.domain.networkconnection.NetworkConnection
 import com.mfomin.sunrise.domain.networkconnection.NetworkStateListener
 import com.mfomin.sunrise.domain.repository.SunriseInfoRepository
 import com.mfomin.sunrise.remote.RemoteRepositoryImpl
 import com.mfomin.sunrise.remote.SunriseApi
 import com.mfomin.sunrise.remote.mapper.SunriseInfoEntityMapper
-import com.mfomin.sunrise.remote.model.RemoteSunriseInfo
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -60,12 +52,10 @@ internal object AppModule {
     fun provideSunriseInfoRepository(
         cacheRepository: CacheRepository,
         remoteRepository: RemoteRepository,
-        networkConnection: NetworkConnection,
         mapper: CitySunriseMapper
     ): SunriseInfoRepository = SunriseInfoRepositoryImpl(
         cacheRepository,
         remoteRepository,
-        networkConnection,
         mapper
     )
 

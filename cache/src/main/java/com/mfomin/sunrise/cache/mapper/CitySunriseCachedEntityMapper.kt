@@ -18,9 +18,10 @@ open class CitySunriseCachedEntityMapper @Inject constructor(
     )
 
     override fun to(type: CitySunriseEntity) = CitySunriseCached(
+        0,
         type.name,
+        type.date,
         coordinatesCachedEntityMapper.to(type.coordinates),
         sunriseInfoCachedEntityMapper.to(type.sunriseInfo)
     )
-
 }

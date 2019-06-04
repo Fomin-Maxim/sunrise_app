@@ -6,6 +6,8 @@ import com.mfomin.sunrise.common.mapper.Mapper
 import com.mfomin.sunrise.data.model.CitySunriseEntity
 import com.mfomin.sunrise.data.repository.CacheRepository
 import io.reactivex.Completable
+import io.reactivex.Maybe
+import io.reactivex.Observable
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -21,38 +23,48 @@ class CacheRepositoryImpl @Inject constructor(
     }
 
     override fun isCurrentLocationSunriseCached(): Single<Boolean> =
-        citySunriseDao.getCurrentLocationSunrise()
+        citySunriseDao.getCurrentLocationSunrise().toSingle()
             .flatMap {
                 Single.just(true)
             }
             .onErrorReturnItem(false)
 
     override fun isCitySunriseCached(name: String): Single<Boolean> =
-        citySunriseDao.getCitySunrise(name)
+        citySunriseDao.getCitySunrise(name).toSingle()
             .flatMap {
                 Single.just(true)
             }
             .onErrorReturnItem(false)
 
     override fun isCurrentLocationSunriseExpired(): Single<Boolean> =
-        citySunriseDao.getCurrentLocationSunrise().map {
+        citySunriseDao.getCurrentLocationSunrise().toSingle().map {
             System.currentTimeMillis() - it.date > expirationTimeCurrentLocation
         }
+            .onErrorReturnItem(true)
 
     override fun isCitySunriseExpired(name: String): Single<Boolean> =
-        citySunriseDao.getCurrentLocationSunrise().map {
+        citySunriseDao.getCurrentLocationSunrise().toSingle().map {
             System.currentTimeMillis() - it.date > expirationTimeCity
         }
+            .onErrorReturnItem(true)
 
     override fun clearCurrentLocationSunrise(): Completable =
         citySunriseDao.deleteCurrentLocationSunrise()
 
-    override fun getCurrentLocationSunrise(): Single<CitySunriseEntity> =
-        citySunriseDao.getCurrentLocationSunrise().map {
-            mapper.from(it)
-        }
+    override fun getCurrentLocationSunrise(): Maybe<CitySunriseEntity> {
 
-    override fun getCityLocationSunrise(name: String): Single<CitySunriseEntity> =
+        citySunriseDao.getAllSunrises()
+            .doOnNext {
+                it.size
+            }.subscribe()
+
+        return citySunriseDao.getCurrentLocationSunrise()
+            .map {
+                mapper.from(it)
+            }
+    }
+
+    override fun getCityLocationSunrise(name: String): Maybe<CitySunriseEntity> =
         citySunriseDao.getCitySunrise(name).map {
             mapper.from(it)
         }

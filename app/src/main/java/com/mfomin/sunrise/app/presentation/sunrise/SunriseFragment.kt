@@ -1,18 +1,16 @@
 package com.mfomin.sunrise.app.presentation.sunrise
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.Observable
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.common.api.Status
-import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
@@ -55,20 +53,6 @@ class SunriseFragment : DaggerFragment(), Injectable {
 
         enableCustomCity(false)
 
-        binding.rbCurrentLocation.setOnCheckedChangeListener { _, isChecked ->
-            enableCustomCity(!isChecked)
-            if (isChecked) {
-                viewModel.getSunriseInfo()
-                binding.tvResult.text = ""
-            }
-        }
-
-        binding.rbCustomCity.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                binding.tvResult.text = ""
-            }
-        }
-
         autocompleteFragment =
             childFragmentManager.findFragmentById(R.id.autocomplete_fragment) as AutocompleteSupportFragment
         enableCustomCity(false)
@@ -76,9 +60,9 @@ class SunriseFragment : DaggerFragment(), Injectable {
         setupAutocompleteFragment()
         subscribeToViewModel()
 
-        //кеширование
-        //вывод (время)
-        //отсутствие инета
+        binding.viewModel = viewModel
+
+        //todo вывод (время)
         //чистка кода
 
         return binding.root
@@ -109,11 +93,7 @@ class SunriseFragment : DaggerFragment(), Injectable {
                     Snackbar.make(binding.root, R.string.error_cant_obtain_city_location, Snackbar.LENGTH_LONG)
                         .show()
                 } else {
-                    viewModel.getSunriseInfoForCity(
-                        place.name ?: "",
-                        place.latLng!!.latitude,
-                        place.latLng!!.longitude
-                    )
+                    viewModel.setSelectedPlace(place)
                 }
             }
         })
@@ -173,18 +153,31 @@ class SunriseFragment : DaggerFragment(), Injectable {
 
         viewModel.networkConnected.observe(this, androidx.lifecycle.Observer { isConnected ->
             if (isConnected) {
-                internetAvailabilitySnackbar.show()
-            } else {
                 internetAvailabilitySnackbar.dismiss()
+                viewModel.updateSunrise()
+            } else {
+                internetAvailabilitySnackbar.show()
             }
         })
-        viewModel.getSunriseInfo()
+
+        viewModel.optionCurrentLocationChecked.addOnPropertyChangedCallback(object :
+            Observable.OnPropertyChangedCallback() {
+            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                binding.tvResult.text = ""
+
+                val isChecked = viewModel.optionCurrentLocationChecked.get()
+                enableCustomCity(!isChecked)
+
+                viewModel.updateSunrise()
+            }
+        })
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults.first() == PackageManager.PERMISSION_GRANTED) {
                 enableCurrentLocation(true)
+                viewModel.updateSunrise()
             } else {
                 enableCurrentLocation(false)
                 showLocationPermissionRequiredError()
