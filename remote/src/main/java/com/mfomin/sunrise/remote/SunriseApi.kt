@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface SunriseApi {
 
-    @GET("json")
+    @GET("json?formatted=0&")
     fun getSunriseByCoordinates(
         @Query("lat") lat: Double,
         @Query("lng") lon: Double

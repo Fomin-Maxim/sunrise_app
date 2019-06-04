@@ -24,6 +24,7 @@ dependencies {
     implementation(Config.Dependencies.retrofitRxAdapter)
     implementation(Config.Dependencies.retrofit)
     implementation(Config.Dependencies.retrofitMoshi)
+    implementation(Config.Dependencies.moshiAdapters)
     implementation(Config.Dependencies.moshi)
     kapt(Config.Dependencies.moshiCodeGen)
 

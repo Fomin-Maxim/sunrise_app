@@ -1,8 +1,8 @@
 package com.mfomin.sunrise.app.presentation.sunrise
 
+import androidx.databinding.Observable
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.MutableLiveData
-import com.google.android.libraries.places.api.model.Place
 import com.mfomin.sunrise.app.presentation.common.BaseViewModel
 import com.mfomin.sunrise.app.util.livedata.Result
 import com.mfomin.sunrise.common.scheduler.SchedulerProvider
@@ -26,25 +26,35 @@ class SunriseViewModel @Inject constructor(
 
     val sunriseInfo = MutableLiveData<Result<CitySunrise>>()
     val networkConnected = MutableLiveData<Boolean>()
+    val selectedPlace = MutableLiveData<SelectedPlace>()
 
     val optionCurrentLocationChecked: ObservableBoolean = ObservableBoolean(true)
     val optionCityChecked: ObservableBoolean = ObservableBoolean(false)
 
-    private val selectedPlace = BehaviorSubject.create<Place>()
+    private val selectedPlaceSubject = BehaviorSubject.create<SelectedPlace>()
 
     init {
         networkConnected.postValue(networkConnection.isConnected())
 
         networkStateListener.onNetConnected().subscribe {
             networkConnected.postValue(it)
+            updateSunrise()
         }.addTo(compositeDisposable)
 
-        selectedPlace.subscribe { place ->
+        selectedPlaceSubject.subscribe { place ->
             getSunriseInfoForCity(place)
+            selectedPlace.postValue(place)
         }.addTo(compositeDisposable)
+
+        optionCityChecked.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
+            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                sunriseInfo.postValue(Result.created())
+                updateSunrise()
+            }
+        })
     }
 
-    fun getLocationSunriseInfo() {
+    private fun getLocationSunriseInfo() {
         locationRepository.getBestLastLocation()
             .switchMap {
                 sunriseInfoRepository.getCurrentLocationSunrise(it.latitude, it.longitude)
@@ -63,7 +73,7 @@ class SunriseViewModel @Inject constructor(
             .addTo(compositeDisposable)
     }
 
-    fun getSunriseInfoForCity(name: String, latitude: Double, longitude: Double) {
+    private fun getSunriseInfoForCity(name: String, latitude: Double, longitude: Double) {
         sunriseInfoRepository.getCitySunrise(name, latitude, longitude)
             .subscribeOn(schedulerProvider.io())
             .doOnSubscribe {
@@ -81,24 +91,31 @@ class SunriseViewModel @Inject constructor(
     }
 
     fun updateSunrise() {
-        if (optionCurrentLocationChecked.get()) {
+        if (optionCurrentLocationChecked.get() && !optionCityChecked.get()) {
             getLocationSunriseInfo()
         } else {
-            val place = selectedPlace.value
+            val place = selectedPlaceSubject.value
             if (place != null)
                 getSunriseInfoForCity(place)
         }
     }
 
-    private fun getSunriseInfoForCity(place: Place) {
-        getSunriseInfoForCity(
-            place.name ?: "",
-            place.latLng!!.latitude,
-            place.latLng!!.longitude
-        )
+    private fun getSunriseInfoForCity(selectedPlace: SelectedPlace) {
+        selectedPlace.place?.let {
+            getSunriseInfoForCity(
+                it.name ?: "",
+                it.latLng!!.latitude,
+                it.latLng!!.longitude
+            )
+        }
     }
 
-    fun setSelectedPlace(place: Place) {
-        selectedPlace.onNext(place)
+    fun setSelectedPlace(selectedPlace: SelectedPlace) {
+        selectedPlaceSubject.onNext(selectedPlace)
+    }
+
+    fun clearSelectedPlace() {
+        selectedPlaceSubject.onNext(SelectedPlace(null))
+        sunriseInfo.postValue(Result.created())
     }
 }

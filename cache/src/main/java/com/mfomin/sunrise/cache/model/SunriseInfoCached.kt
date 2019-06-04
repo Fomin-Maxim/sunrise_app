@@ -1,14 +1,16 @@
 package com.mfomin.sunrise.cache.model
 
+import java.util.*
+
 data class SunriseInfoCached(
-    val sunrise: String,
-    val sunset: String,
-    val solarNoon: String,
-    val dayLength: String,
-    val civilTwilightBegin: String,
-    val civilTwilightEnd: String,
-    val nauticalTwilightBegin: String,
-    val nauticalTwilightEnd: String,
-    val astronomicalTwilightBegin: String,
-    val astronomicalTwilightEnd: String
+    val sunrise: Date,
+    val sunset: Date,
+    val solarNoon: Date,
+    val dayLength: Long,
+    val civilTwilightBegin: Date,
+    val civilTwilightEnd: Date,
+    val nauticalTwilightBegin: Date,
+    val nauticalTwilightEnd: Date,
+    val astronomicalTwilightBegin: Date,
+    val astronomicalTwilightEnd: Date
 )

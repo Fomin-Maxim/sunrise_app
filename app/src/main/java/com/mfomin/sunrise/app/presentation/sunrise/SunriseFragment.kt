@@ -3,11 +3,11 @@ package com.mfomin.sunrise.app.presentation.sunrise
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.Observable
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.common.api.Status
@@ -21,10 +21,11 @@ import com.mfomin.sunrise.app.di.Injectable
 import com.mfomin.sunrise.app.permission.PermissionManager
 import com.mfomin.sunrise.app.util.livedata.liveDataResultHandler
 import com.mfomin.sunrise.app.util.livedata.observe
+import com.mfomin.sunrise.app.util.setVisibility
 import dagger.android.support.DaggerFragment
+import java.text.DateFormat
 import java.util.*
 import javax.inject.Inject
-
 
 class SunriseFragment : DaggerFragment(), Injectable {
 
@@ -43,6 +44,7 @@ class SunriseFragment : DaggerFragment(), Injectable {
     private lateinit var internetAvailabilitySnackbar: Snackbar
 
     private lateinit var binding: FragmentSunriseBinding
+    private val dateFormat = DateFormat.getTimeInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,52 +53,19 @@ class SunriseFragment : DaggerFragment(), Injectable {
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_sunrise, container, false)
 
-        enableCustomCity(false)
-
         autocompleteFragment =
             childFragmentManager.findFragmentById(R.id.autocomplete_fragment) as AutocompleteSupportFragment
-        enableCustomCity(false)
 
         setupAutocompleteFragment()
-        subscribeToViewModel()
-
         binding.viewModel = viewModel
 
-        //todo вывод (время)
-        //чистка кода
+        subscribeToViewModel()
+
+        binding.rgRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+            enableCustomCity(checkedId == R.id.rb_custom_city)
+        }
 
         return binding.root
-    }
-
-    private fun setupAutocompleteFragment() {
-        autocompleteFragment?.a?.hint = getString(R.string.label_select_city)
-
-        autocompleteFragment?.setPlaceFields(
-            Arrays.asList(
-                Place.Field.ID, Place.Field.NAME
-            )
-        )
-
-        autocompleteFragment?.setPlaceFields(
-            Arrays.asList(
-                Place.Field.NAME, Place.Field.LAT_LNG
-            )
-        )
-
-        autocompleteFragment?.setOnPlaceSelectedListener(object : PlaceSelectionListener {
-            override fun onError(status: Status) {
-
-            }
-
-            override fun onPlaceSelected(place: Place) {
-                if (place.latLng == null || place.name == null) {
-                    Snackbar.make(binding.root, R.string.error_cant_obtain_city_location, Snackbar.LENGTH_LONG)
-                        .show()
-                } else {
-                    viewModel.setSelectedPlace(place)
-                }
-            }
-        })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -124,11 +93,7 @@ class SunriseFragment : DaggerFragment(), Injectable {
     }
 
     private fun enableCustomCity(isEnabled: Boolean) {
-        if (autocompleteFragment != null)
-            if (isEnabled)
-                childFragmentManager.beginTransaction().show(autocompleteFragment!!).commit()
-            else
-                childFragmentManager.beginTransaction().hide(autocompleteFragment!!).commit()
+        binding.cvAutocomplete.setVisibility(isEnabled)
     }
 
     private fun subscribeToViewModel() {
@@ -137,11 +102,14 @@ class SunriseFragment : DaggerFragment(), Injectable {
                 binding.tvResult.text =
                     getString(
                         R.string.sunrise_result,
-                        it.sunriseInfo.sunrise,
-                        it.sunriseInfo.sunset,
-                        it.sunriseInfo.solarNoon,
-                        it.sunriseInfo.dayLength
+                        dateFormat.format(it.sunriseInfo.sunrise),
+                        dateFormat.format(it.sunriseInfo.sunset),
+                        dateFormat.format(it.sunriseInfo.solarNoon),
+                        DateUtils.formatElapsedTime(it.sunriseInfo.dayLength)
                     )
+            },
+            onCreated = {
+                binding.tvResult.text = ""
             },
             onProgress = {
                 binding.tvResult.text = getString(R.string.label_loading)
@@ -154,26 +122,61 @@ class SunriseFragment : DaggerFragment(), Injectable {
         viewModel.networkConnected.observe(this, androidx.lifecycle.Observer { isConnected ->
             if (isConnected) {
                 internetAvailabilitySnackbar.dismiss()
-                viewModel.updateSunrise()
             } else {
                 internetAvailabilitySnackbar.show()
             }
         })
 
-        viewModel.optionCurrentLocationChecked.addOnPropertyChangedCallback(object :
-            Observable.OnPropertyChangedCallback() {
-            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+        viewModel.selectedPlace.observe(this) { selectedPlace ->
+            if (selectedPlace?.place == null) {
                 binding.tvResult.text = ""
-
-                val isChecked = viewModel.optionCurrentLocationChecked.get()
-                enableCustomCity(!isChecked)
-
-                viewModel.updateSunrise()
             }
-        })
+        }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    private fun setupAutocompleteFragment() {
+        autocompleteFragment?.apply {
+            setHint(getString(R.string.label_select_city))
+
+            view?.findViewById<View>(R.id.places_autocomplete_clear_button)
+                ?.setOnClickListener {
+                    autocompleteFragment?.setText("")
+                    binding.tvResult.text = ""
+                    viewModel.clearSelectedPlace()
+                }
+
+            setPlaceFields(
+                Arrays.asList(
+                    Place.Field.ID, Place.Field.NAME
+                )
+            )
+
+            setPlaceFields(
+                Arrays.asList(
+                    Place.Field.NAME, Place.Field.LAT_LNG
+                )
+            )
+
+            setOnPlaceSelectedListener(object : PlaceSelectionListener {
+                override fun onPlaceSelected(place: Place) {
+                    if (place.latLng == null || place.name == null) {
+                        Snackbar.make(binding.root, R.string.error_cant_obtain_city_location, Snackbar.LENGTH_LONG)
+                            .show()
+                    } else {
+                        viewModel.setSelectedPlace(SelectedPlace(place))
+                    }
+                }
+
+                override fun onError(status: Status) {}
+            })
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults.first() == PackageManager.PERMISSION_GRANTED) {
                 enableCurrentLocation(true)

@@ -3,6 +3,7 @@ package com.mfomin.sunrise.remote.di
 import com.mfomin.sunrise.remote.SunriseApi
 import com.mfomin.sunrise.remote.retrofit.MainRxErrorHandlingCallAdapterFactory
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoSet
@@ -11,9 +12,11 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
+
 
 @Module
 open class NetworkModule {
@@ -40,15 +43,22 @@ open class NetworkModule {
     @Singleton
     @Provides
     @Named("sunrise_sunset_api")
-    fun provideRetrofitMain(okHttpClient: OkHttpClient): Retrofit {
+    fun provideRetrofitMain(okHttpClient: OkHttpClient, converterFactory: MoshiConverterFactory): Retrofit {
         return Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl("https://api.sunrise-sunset.org")
-            .addConverterFactory(
-                MoshiConverterFactory.create()
-            )
+            .addConverterFactory(converterFactory)
             .addCallAdapterFactory(MainRxErrorHandlingCallAdapterFactory.createAsync())
             .build()
+    }
+
+    @Singleton
+    @Provides
+    fun createMoshiConverterFactory(): MoshiConverterFactory {
+        val moshi = Moshi.Builder()
+            .add(Date::class.java, Rfc3339DateJsonAdapter())
+            .build()
+        return MoshiConverterFactory.create(moshi)
     }
 
     @Singleton

@@ -1,9 +1,10 @@
 package com.mfomin.sunrise.app.util.livedata
 
 fun <T> liveDataResultHandler(
-        onSuccess: (T) -> Unit,
-        onProgress: () -> Unit = {},
-        onError: (Throwable) -> Unit = defaultErrorHandler()
+    onSuccess: (T) -> Unit,
+    onProgress: () -> Unit = {},
+    onError: (Throwable) -> Unit = defaultErrorHandler(),
+    onCreated: () -> Unit = {}
 ): ((Result<T>?) -> Unit) = {
     when (it) {
         is Result.Success ->
@@ -14,5 +15,8 @@ fun <T> liveDataResultHandler(
 
         is Result.Failure ->
             onError(it.e)
+
+        is Result.Created ->
+            onCreated()
     }
 }

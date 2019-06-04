@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Sunrise&amp;Sunset time</string>
 
     <string name="title_sunrise">Sunrise</string>
 
@@ -16,6 +16,6 @@
     <string name="error_permission_required_location">Application doesn\'t has access to device location</string>
     <string name="error_cant_obtain_city_location">Can\'t obtain city location</string>
 
-    <string name="sunrise_result">Sunrise:\t%1$s\nSunset:\t%2$s\nSolar noon:\t%3$s\nDay length:\t%4$s</string>
+    <string name="sunrise_result">Sunrise:\t\t%1$s\nSunset:\t\t%2$s\nSolar noon:\t\t%3$s\nDay length:\t\t%4$s</string>
     <string name="error_no_internet">No internet connection</string>
 </resources>

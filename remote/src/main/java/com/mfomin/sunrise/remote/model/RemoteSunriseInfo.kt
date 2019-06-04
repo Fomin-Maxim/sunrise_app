@@ -1,35 +1,36 @@
 package com.mfomin.sunrise.remote.model
 
 import com.squareup.moshi.Json
+import java.util.*
 
 data class RemoteSunriseInfo(
     @field:Json(name = "sunrise")
-    val sunrise: String,
+    val sunrise: Date,
 
     @field:Json(name = "sunset")
-    val sunset: String,
+    val sunset: Date,
 
     @field:Json(name = "solar_noon")
-    val solarNoon: String,
+    val solarNoon: Date,
 
     @field:Json(name = "day_length")
-    val dayLength: String,
+    val dayLength: Long,
 
     @field:Json(name = "civil_twilight_begin")
-    val civilTwilightBegin: String,
+    val civilTwilightBegin: Date,
 
     @field:Json(name = "civil_twilight_end")
-    val civilTwilightEnd: String,
+    val civilTwilightEnd: Date,
 
     @field:Json(name = "nautical_twilight_begin")
-    val nauticalTwilightBegin: String,
+    val nauticalTwilightBegin: Date,
 
     @field:Json(name = "nautical_twilight_end")
-    val nauticalTwilightEnd: String,
+    val nauticalTwilightEnd: Date,
 
     @field:Json(name = "astronomical_twilight_begin")
-    val astronomicalTwilightBegin: String,
+    val astronomicalTwilightBegin: Date,
 
     @field:Json(name = "astronomical_twilight_end")
-    val astronomicalTwilightEnd: String
+    val astronomicalTwilightEnd: Date
 )

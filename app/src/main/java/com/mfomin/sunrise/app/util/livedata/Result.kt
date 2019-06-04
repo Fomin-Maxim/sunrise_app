@@ -12,11 +12,16 @@ sealed class Result<T>(val inProgress: Boolean) {
         override fun hashCode(): Int = javaClass.hashCode()
     }
 
+    class Created<T> : Result<T>(false)
+
     data class Success<T>(var data: T) : Result<T>(false)
 
     data class Failure<T>(val errorMessage: String?, val e: Throwable) : Result<T>(false)
 
     companion object {
+        fun <T> created(): Result<T> =
+            Created()
+
         fun <T> inProgress(): Result<T> =
             InProgress()
 

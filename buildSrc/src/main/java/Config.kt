@@ -82,6 +82,7 @@ object Config {
         const val retrofitCouroutines =
             "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:${Config.Versions.retrofitCoroutinesAdapter}"
         const val moshi = "com.squareup.moshi:moshi:${Config.Versions.moshi}"
+        const val moshiAdapters = "com.squareup.moshi:moshi-adapters:${Config.Versions.moshi}"
         const val moshiCodeGen = "com.squareup.moshi:moshi-kotlin-codegen:${Config.Versions.moshi}"
 
         const val junit = "junit:junit:${Config.Versions.junit}"
