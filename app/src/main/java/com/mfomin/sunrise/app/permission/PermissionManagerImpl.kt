@@ -2,7 +2,6 @@ package com.mfomin.sunrise.app.permission
 
 import android.content.pm.PackageManager
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import javax.inject.Inject

@@ -1,6 +1,5 @@
 package com.mfomin.sunrise.domain.networkconnection
 
-import io.reactivex.Completable
 import io.reactivex.Observable
 
 interface NetworkStateListener {

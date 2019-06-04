@@ -7,9 +7,7 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import com.mfomin.sunrise.domain.networkconnection.NetworkConnection
 import com.mfomin.sunrise.domain.networkconnection.NetworkStateListener
-import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import javax.inject.Inject
 
 
@@ -26,6 +24,7 @@ class NetworkStateListenerImpl @Inject constructor(
                 }
             }
 
+            @Suppress("DEPRECATION")
             this.context.registerReceiver(
                 isConnectedToNetworkReceiver,
                 IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)

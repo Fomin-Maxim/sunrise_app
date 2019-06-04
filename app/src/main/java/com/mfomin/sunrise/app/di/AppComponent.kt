@@ -1,7 +1,6 @@
 package com.mfomin.sunrise.app.di
 
 import android.app.Application
-import android.content.Context
 import com.mfomin.sunrise.app.SunriseApplication
 import com.mfomin.sunrise.app.di.activity.ActivityBuilder
 import com.mfomin.sunrise.cache.di.DatabaseModule

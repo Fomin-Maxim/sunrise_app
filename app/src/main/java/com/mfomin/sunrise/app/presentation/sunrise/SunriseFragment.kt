@@ -19,15 +19,15 @@ import com.mfomin.sunrise.app.R
 import com.mfomin.sunrise.app.databinding.FragmentSunriseBinding
 import com.mfomin.sunrise.app.di.Injectable
 import com.mfomin.sunrise.app.permission.PermissionManager
+import com.mfomin.sunrise.app.presentation.common.BaseFragment
 import com.mfomin.sunrise.app.util.livedata.liveDataResultHandler
 import com.mfomin.sunrise.app.util.livedata.observe
 import com.mfomin.sunrise.app.util.setVisibility
-import dagger.android.support.DaggerFragment
 import java.text.DateFormat
 import java.util.*
 import javax.inject.Inject
 
-class SunriseFragment : DaggerFragment(), Injectable {
+class SunriseFragment : BaseFragment(), Injectable {
 
     @Inject
     lateinit var permissionManager: PermissionManager

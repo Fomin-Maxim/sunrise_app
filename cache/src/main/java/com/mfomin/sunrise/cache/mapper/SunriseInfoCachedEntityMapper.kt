@@ -3,7 +3,6 @@ package com.mfomin.sunrise.cache.mapper
 import com.mfomin.sunrise.cache.model.SunriseInfoCached
 import com.mfomin.sunrise.common.mapper.Mapper
 import com.mfomin.sunrise.data.model.SunriseInfoEntity
-import com.mfomin.sunrise.domain.model.SunriseInfo
 import javax.inject.Inject
 
 open class SunriseInfoCachedEntityMapper @Inject constructor() : Mapper<SunriseInfoCached, SunriseInfoEntity> {

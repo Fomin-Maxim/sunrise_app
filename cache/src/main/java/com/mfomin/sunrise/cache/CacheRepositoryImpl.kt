@@ -7,7 +7,6 @@ import com.mfomin.sunrise.data.model.CitySunriseEntity
 import com.mfomin.sunrise.data.repository.CacheRepository
 import io.reactivex.Completable
 import io.reactivex.Maybe
-import io.reactivex.Observable
 import io.reactivex.Single
 import javax.inject.Inject
 

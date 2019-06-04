@@ -8,7 +8,6 @@ import com.mfomin.sunrise.cache.model.CitySunriseCached
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
-import io.reactivex.Single
 
 @Dao
 interface CitySunriseDao {

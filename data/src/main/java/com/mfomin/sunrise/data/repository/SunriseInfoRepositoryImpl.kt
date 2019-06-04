@@ -10,8 +10,6 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import io.reactivex.functions.Function
-import sun.rmi.runtime.Log
 import javax.inject.Inject
 
 class SunriseInfoRepositoryImpl @Inject constructor(
@@ -93,13 +91,11 @@ class SunriseInfoRepositoryImpl @Inject constructor(
         remoteRepository.getSunriseInfo(lat, lon).map {
             val result = CitySunriseEntity(0, System.currentTimeMillis(), name, CoordinatesEntity(lat, lon), it)
             saveCitySunrise(mapper.from(result))
-                .subscribe(
-                    { "qwe".toString() },
-                    { it.printStackTrace() })
             result
         }.toObservable()
 
-    override fun saveCitySunrise(citySunrise: CitySunrise): Completable {
-        return cacheRepository.saveCitySunrise(mapper.to(citySunrise))
+    override fun saveCitySunrise(citySunrise: CitySunrise) {
+        cacheRepository.saveCitySunrise(mapper.to(citySunrise))
+            .subscribe()
     }
 }
